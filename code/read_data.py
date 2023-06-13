@@ -213,7 +213,7 @@ def plot_channel(data, channel_name, slope, y_offset, x_label, y_label, dataset)
     values = data[channel_name].to_numpy()
     values = values * slope + y_offset
     # increase the size of the labels in the plot
-    plt.rcParams.update({'font.size': 22})
+    plt.rcParams.update({'font.size': 15})
 
     plt.figure(figsize=(10, 6))
     plt.plot(values)
@@ -222,3 +222,14 @@ def plot_channel(data, channel_name, slope, y_offset, x_label, y_label, dataset)
     plt.title(channel_name)
     plt.savefig(os.path.join("Figures", dataset + "_" + channel_name + ".pdf"))
     plt.show()
+
+# function to clear Figures directory
+def clear_figures():
+    folder = './Figures'
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            continue

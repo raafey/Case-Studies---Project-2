@@ -223,7 +223,7 @@ def plot_channel(data, channel_name, slope, y_offset, x_label, y_label, dataset)
     plt.savefig(os.path.join("Figures", dataset + "_" + channel_name + ".pdf"))
     plt.show()
 
-# function to clear Figures directory
+
 def clear_figures():
     folder = './Figures'
     for filename in os.listdir(folder):

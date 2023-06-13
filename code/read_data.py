@@ -214,7 +214,7 @@ def plot_channel(data, channel_name, slope, y_offset, x_label, y_label, dataset)
     values = values * slope + y_offset
     # increase the size of the labels in the plot
     plt.rcParams.update({'font.size': 22})
-    
+
     plt.figure(figsize=(10, 6))
     plt.plot(values)
     plt.xlabel(x_label)

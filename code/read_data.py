@@ -226,7 +226,7 @@ def read_bin_file(file_path, header_obj):
     return data
 
 def process_data():
-    original_data_dir_name = "..\\data"
+    original_data_dir_name = "../data"
     dat_file_names = ["V2_00001-1.DAT", "V2_00001.dat", "V10_0001.dat", "D0400001.dat" ,"D0600001.dat" ,"D0800001.dat" ,"V6_00001.dat" ,"V17_0001.dat" ,"V20_0001.dat" ,"V24_0001.dat" ,"V25a_001.dat"]
     hdr_file_names = ["V2_00001-1.HDR", "V2_00001.hdr", "V10_0001.hdr", "D0400001.hdr" ,"D0600001.hdr" ,"D0800001.hdr" ,"V6_00001.hdr" ,"V17_0001.hdr" ,"V20_0001.hdr" ,"V24_0001.hdr" ,"V25a_001.hdr"]
     hdr_file_paths = [os.path.join(original_data_dir_name, name) for name in hdr_file_names]
@@ -262,10 +262,8 @@ def process_data():
 def plot_channels(data, data_set):
     fig_dir = "Figures"
     channel_dir = os.path.join(fig_dir, data_set)
-    if os.path.exists(channel_dir):
-        shutil.rmtree(channel_dir)
-    
-    os.mkdir(channel_dir)
+    if not os.path.exists(channel_dir):
+        os.mkdir(channel_dir)
     
     dat = data[data_set]["dat"]
     hdr = data[data_set]["hdr"]
@@ -274,7 +272,7 @@ def plot_channels(data, data_set):
         channel = hdr.channel_names[i]
         file_name = os.path.join(channel_dir, data_set + "_" + channel + ".pdf")
         plot_ts(data=dat[channel], time=dat["time"],
-                x_label=hdr.horz_units, y_label=hdr.vert_units[i],
+                x_label="Time (s)", y_label=hdr.vert_units[i],
                 channel_name=channel, file_name=file_name)
 
 

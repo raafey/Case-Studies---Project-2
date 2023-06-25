@@ -1,0 +1,4 @@
+ - Identify changepoints (Farrukh)
+ - Autocorrelation & PaCF (Amir)
+ - Identifying shattering at an early stage (Aymane)
+ - splitting the timeseries into seasonality, trend, and random component (Raafey)

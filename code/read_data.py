@@ -1,14 +1,32 @@
+# Project: 2
+
+# Group: 3
+
+# Group Members:
+#  - Muhammad Raafey Tariq (231806)
+#  - Farrukh Ahmed (230614)
+#  - Amirreza Khamehchin Khiabani (230891)
+#  - Aymane Hachcham (236392)
+
+
 import pandas as pd
 import os
-import matplotlib.pyplot as plt
+import numpy as np
+import shutil
+import matplotlib
+from matplotlib import pyplot as plt
 from datetime import datetime
 from pprint import pprint
+
+matplotlib.rcParams["font.family"] = "Times New Roman"
+matplotlib.rcParams.update({'font.size': 16})
 
 
 class ReadHdrFile:
     def __init__(self, file_path):
         self.dataset = None
         self.version = None
+        self.rate = None
         self.channel_names = None
         self.mix_mode = None
         self.date_time = None
@@ -60,7 +78,7 @@ class ReadHdrFile:
                 self.external_sampling = True
 
         if "VERT_UNITS" in hdr_data:
-            self.vert_units = hdr_data["VERT_UNITS"][0]
+            self.vert_units = hdr_data["VERT_UNITS"]
         
         if "HORZ_UNITS" in hdr_data:
             self.horz_units = hdr_data["HORZ_UNITS"][0]
@@ -207,20 +225,66 @@ def read_bin_file(file_path, header_obj):
 
     return data
 
+def process_data():
+    original_data_dir_name = "..\\data"
+    dat_file_names = ["V2_00001-1.DAT", "V2_00001.dat", "V10_0001.dat", "D0400001.dat" ,"D0600001.dat" ,"D0800001.dat" ,"V6_00001.dat" ,"V17_0001.dat" ,"V20_0001.dat" ,"V24_0001.dat" ,"V25a_001.dat"]
+    hdr_file_names = ["V2_00001-1.HDR", "V2_00001.hdr", "V10_0001.hdr", "D0400001.hdr" ,"D0600001.hdr" ,"D0800001.hdr" ,"V6_00001.hdr" ,"V17_0001.hdr" ,"V20_0001.hdr" ,"V24_0001.hdr" ,"V25a_001.hdr"]
+    hdr_file_paths = [os.path.join(original_data_dir_name, name) for name in hdr_file_names]
+    csv_dat_file_paths = [os.path.join(original_data_dir_name, name.replace("dat", "csv") if "dat" in name else name.replace("DAT", "csv")) for name in dat_file_names]
+
+    data = {}
+    for i in range(len(dat_file_names)):
+        csv_path = csv_dat_file_paths[i]
+        hdr_path = hdr_file_paths[i]
+        
+        curr_hdr = ReadHdrFile(hdr_path)
+        curr_data = read_bin_file(csv_path, curr_hdr)
+
+        for i in range(len(curr_data.columns)):
+            col = curr_data.columns[i]
+            values = curr_data[col].to_numpy()
+            values = values * curr_hdr.slope[i] + curr_hdr.y_offset[i]
+            curr_data[col] = values
+        
+        size = len(curr_data)
+        t = float(1 / curr_hdr.rate)
+        time_array = np.arange(0, size*t, t)
+        curr_data["time"] = time_array
+
+        data[curr_hdr.dataset] = {
+            "hdr": curr_hdr,
+            "dat": curr_data
+        }
+    
+    return data
 
 
-def plot_channel(data, channel_name, slope, y_offset, x_label, y_label, dataset):
-    values = data[channel_name].to_numpy()
-    values = values * slope + y_offset
-    # increase the size of the labels in the plot
-    plt.rcParams.update({'font.size': 15})
+def plot_channels(data, data_set):
+    fig_dir = "Figures"
+    channel_dir = os.path.join(fig_dir, data_set)
+    if os.path.exists(channel_dir):
+        shutil.rmtree(channel_dir)
+    
+    os.mkdir(channel_dir)
+    
+    dat = data[data_set]["dat"]
+    hdr = data[data_set]["hdr"]
 
+    for i in range(len(hdr.channel_names)):
+        channel = hdr.channel_names[i]
+        file_name = os.path.join(channel_dir, data_set + "_" + channel + ".pdf")
+        plot_ts(data=dat[channel], time=dat["time"],
+                x_label=hdr.horz_units, y_label=hdr.vert_units[i],
+                channel_name=channel, file_name=file_name)
+
+
+def plot_ts(data, time, x_label, y_label, channel_name, file_name):
     plt.figure(figsize=(10, 6))
-    plt.plot(values)
+    plt.plot(time, data)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.title(channel_name)
-    plt.savefig(os.path.join("Figures", dataset + "_" + channel_name + ".pdf"))
+    plt.savefig(file_name, dpi=180, bbox_inches='tight')
     plt.show()
 
 

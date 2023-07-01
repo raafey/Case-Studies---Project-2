@@ -259,22 +259,32 @@ def process_data():
     return data
 
 
-def plot_channels(data, data_set):
-    fig_dir = "Figures"
-    channel_dir = os.path.join(fig_dir, data_set)
-    if not os.path.exists(channel_dir):
-        os.mkdir(channel_dir)
+def plot_channels(data, data_set, channel):
+    # fig_dir = "Figures"
+    # channel_dir = os.path.join(fig_dir, data_set)
+    # if not os.path.exists(channel_dir):
+    #     os.mkdir(channel_dir)
     
     dat = data[data_set]["dat"]
     hdr = data[data_set]["hdr"]
 
     for i in range(len(hdr.channel_names)):
-        channel = hdr.channel_names[i]
-        file_name = os.path.join(channel_dir, data_set + "_" + channel + ".pdf")
-        plot_ts(data=dat[channel], time=dat["time"],
-                x_label="Time (s)", y_label=hdr.vert_units[i],
-                channel_name=channel, file_name=file_name)
+        if channel == hdr.channel_names[i]:
+            # file_name = os.path.join(channel_dir, data_set + "_" + channel + ".pdf")
+            plot_ts(data=dat[channel], time=dat["time"],
+                    x_label="Time (s)", y_label=hdr.vert_units[i],
+                    channel_name=channel, file_name='test.pdf')
 
+def plot_per_channel(data, data_set, channel):
+
+    dat = data[data_set]["dat"]
+    hdr = data[data_set]["hdr"]
+
+    for i in range(len(hdr.channel_names)):
+        if channel == hdr.channel_names[i]:
+            plot_ts(data=dat[channel], time=dat["time"],
+                    x_label="Time (s)", y_label=hdr.vert_units[i],
+                    channel_name=channel, file_name=channel + ".pdf")
 
 def plot_ts(data, time, x_label, y_label, channel_name, file_name):
     plt.figure(figsize=(10, 6))

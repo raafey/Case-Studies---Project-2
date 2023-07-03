@@ -123,31 +123,7 @@ class ReadHdrFile:
     
 
     def print_values(self):
-        value_dict = {}
-        value_dict["dataset"] = self.dataset
-        value_dict["version"] = self.version
-        value_dict["channel_names"] = self.channel_names
-        value_dict["mix_mode"] = self.mix_mode
-        value_dict["date_time"] = self.date_time
-        value_dict["rate"] = self.rate
-        value_dict["externam_sampling"] = self.external_sampling
-        value_dict["vert_units"] = self.vert_units
-        value_dict["horz_units"] = self.horz_units
-        value_dict["comment"] = self.comment
-        value_dict["channels"] = self.num_channels
-        value_dict["strg_mode"] = self.strg_mode
-        value_dict["file_type"] = self.file_type
-        value_dict["slope"] = self.slope
-        value_dict["x_offset"] = self.x_offset
-        value_dict["y_offset"] = self.y_offset
-        value_dict["num_samples"] = self.num_samples
-        value_dict["uq_device"] = self.uq_device
-        value_dict["device"] = self.device
-        value_dict["channel_info"] = self.channel_info
-        value_dict["channel_slots"] = self.channel_slots
-        value_dict["clock"] = self.clock
-
-        pprint(value_dict)
+        pprint(self.to_dict())
 
     def __filter_channel(self, channel):
         info = {
@@ -217,6 +193,34 @@ class ReadHdrFile:
         
         
         return hdr_data
+    
+
+    def to_dict(self):
+        value_dict = {}
+        value_dict["dataset"] = self.dataset
+        value_dict["version"] = self.version
+        value_dict["channel_names"] = self.channel_names
+        value_dict["mix_mode"] = self.mix_mode
+        value_dict["date_time"] = self.date_time
+        value_dict["rate"] = self.rate
+        value_dict["externam_sampling"] = self.external_sampling
+        value_dict["vert_units"] = self.vert_units
+        value_dict["horz_units"] = self.horz_units
+        value_dict["comment"] = self.comment
+        value_dict["channels"] = self.num_channels
+        value_dict["strg_mode"] = self.strg_mode
+        value_dict["file_type"] = self.file_type
+        value_dict["slope"] = self.slope
+        value_dict["x_offset"] = self.x_offset
+        value_dict["y_offset"] = self.y_offset
+        value_dict["num_samples"] = self.num_samples
+        value_dict["uq_device"] = self.uq_device
+        value_dict["device"] = self.device
+        value_dict["channel_info"] = self.channel_info
+        value_dict["channel_slots"] = self.channel_slots
+        value_dict["clock"] = self.clock
+
+        return value_dict
 
 
 def read_bin_file(file_path, header_obj):

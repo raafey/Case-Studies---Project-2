@@ -287,6 +287,10 @@ def plot_ts(data, time, x_label, y_label, channel_name, file_name):
     plt.ylabel(y_label)
     plt.title(channel_name)
     plt.savefig(file_name, dpi=180, bbox_inches='tight')
+
+    # increase font size for labels:
+    plt.rcParams.update({'font.size': 123})
+
     plt.show()
 
 

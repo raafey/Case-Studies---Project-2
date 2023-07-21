@@ -114,8 +114,10 @@ def plot_change_points(data, change_points, data_set, sensor_name):
     y_value = data[data_set]["dat"][sensor_name]
     plt.figure(figsize=(10, 6))
     plt.plot(x_value.values, y_value.values)
-    plt.ylabel(sensor_name + " (" + hdr.vert_units[hdr.channel_names.index(sensor_name)] + ")")
-    plt.xlabel("Time (s)")
+    plt.title(data_set + " " + sensor_name, fontsize=123)
+    plt.ylabel(sensor_name + " (" + hdr.vert_units[hdr.channel_names.index(sensor_name)] + ")", fontsize=25)
+    plt.xlabel("Time (s)", fontsize=123)
+    plt.tick_params(axis='both', which='major', labelsize=123)
     for xc in change_points[data_set][sensor_name]["change_points"]:
         plt.axvline(x=xc,color='red')
 
@@ -132,9 +134,10 @@ def plot_change_points_mult(datasets, data, change_points, sensor_name, fig_size
         hdr = data[data_set]["hdr"]
         y_value = data[data_set]["dat"][sensor_name]
         axs[i].plot(x_value.values, y_value.values)
-        axs[i].set_ylabel(sensor_name + " (" + hdr.vert_units[hdr.channel_names.index(sensor_name)] + ")")
-        axs[i].set_xlabel("Time (s)")
-        axs[i].set_title(data_set)
+        axs[i].set_ylabel(sensor_name + " (" + hdr.vert_units[hdr.channel_names.index(sensor_name)] + ")", fontsize=25)
+        axs[i].set_xlabel("Time (s)", fontsize=25)
+        axs[i].set_title(data_set, fontsize=25)
+        plt.tick_params(axis='both', which='major', labelsize=25)
         for xc in change_points[data_set][sensor_name]["change_points"]:
             axs[i].axvline(x=xc,color='red')
         axs[i].grid()

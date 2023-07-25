@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 matplotlib.rcParams["font.family"] = "Times New Roman"
 matplotlib.rcParams.update({'font.size': 16})
 
-def plot_acf_by_dataset(datasets, data, sensor, changepoints, cpt_idx, figsize, fig_name):
+def plot_acf_by_dataset(datasets, data, sensor, changepoints, lags, cpt_idx, figsize, fig_name):
     fig, ax = plt.subplots(nrows=len(datasets), ncols=2, figsize=figsize)
     fig.tight_layout(h_pad=2, w_pad=2)
 
@@ -18,8 +18,8 @@ def plot_acf_by_dataset(datasets, data, sensor, changepoints, cpt_idx, figsize, 
         before = original_data.loc[:changepoint_indexes[cpt-1]][-20000:]
         after = original_data.loc[changepoint_indexes[cpt-1]:][0:20000]
 
-        plot_acf(before, ax=ax[i,0], lags=250)
-        plot_acf(after, ax=ax[i,1], lags=250)
+        plot_acf(before, ax=ax[i,0], lags=lags)
+        plot_acf(after, ax=ax[i,1], lags=lags)
 
         if i == 0:
             ax[0,0].set_title("Before")
@@ -30,8 +30,8 @@ def plot_acf_by_dataset(datasets, data, sensor, changepoints, cpt_idx, figsize, 
 
         ax[i,0].set_ylabel('ACF')
         ax[i,1].set_ylabel('ACF')
-        ax[i,0].set_xlabel('Lag (s)')
-        ax[i,1].set_xlabel('Lag (s)')
+        ax[i,0].set_xlabel('Lag')
+        ax[i,1].set_xlabel('Lag')
     
     for i, ax_row in enumerate(ax):
         # Add the row title to the left of the first subplot in the row
